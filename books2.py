@@ -1,6 +1,6 @@
 from typing import Optional
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
 app = FastAPI()
@@ -93,7 +93,10 @@ def find_book_id(book: Book):
 
 @app.put("/books/update_book/{book_id}")
 async def update_book(book_id: int, book_data: BookRequest):
-    for book in BOOKS:
+    for index, book in enumerate(BOOKS):
         if book.id == book_id:
-            book_data.id = book_id
-            BOOKS[book_id - 1] = book_data
+            book_data.id = book.id
+            BOOKS[index] = book_data
+            return {"message": "Livro atualizado com sucesso!", "book": book_data}
+
+    raise HTTPException(status_code=404, detail="Livro não encontrado")
