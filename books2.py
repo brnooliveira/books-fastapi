@@ -100,3 +100,11 @@ async def update_book(book_id: int, book_data: BookRequest):
             return {"message": "Livro atualizado com sucesso!", "book": book_data}
 
     raise HTTPException(status_code=404, detail="Livro não encontrado")
+
+
+@app.delete("/books/{book_id}")
+async def delete_book(book_id: int):
+    for index in range(len(BOOKS)):
+        if BOOKS[index].id == book_id:
+            BOOKS.pop(index)
+            break
